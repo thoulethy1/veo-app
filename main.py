@@ -8,9 +8,7 @@ from dotenv import load_dotenv
 import os
 from openai import OpenAI
 
-
-
-from openai import OpenAI
+load_dotenv()
 
 client = OpenAI()
 
@@ -115,11 +113,13 @@ Avoid any overlap with the previous output.
 
     final_prompt = template.format(prompt=augmented_prompt)
 
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": final_prompt}],
-        temperature=0.8,
-    )
+    response = client.responses.create(
+    model="gpt-4o-mini",
+    input=final_prompt,
+)
+
+last_output = response.output_text
+
 
     last_output = response.choices[0].message.content
     session["last_output"] = last_output
@@ -133,11 +133,13 @@ def ask(prompt: str, request: Request):
 
     chat_history.append({"role": "user", "content": prompt})
 
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=chat_history,
-        temperature=0.7,
-    )
+    response = client.responses.create(
+    model="gpt-4o-mini",
+    input=chat_history,
+)
+
+ai_message = response.output_text
+
 
     ai_message = response.choices[0].message.content
 
