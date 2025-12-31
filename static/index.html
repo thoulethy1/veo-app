@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VEO Prompt Generator</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      padding: 40px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      font-size: 16px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    select, button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      font-size: 16px;
+    }
+
+    pre {
+      margin-top: 20px;
+      background: #020617;
+      padding: 15px;
+      white-space: pre-wrap;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🎬 VEO Prompt Generator</h1>
+
+  <label>Prompt</label><br>
+  <textarea id="prompt" placeholder="Describe your video idea..."></textarea>
+
+  <br>
+
+  <label>Style</label><br>
+  <select id="mode">
+    <option value="cinematic">🎬 Cinematic</option>
+    <option value="realistic">📸 Realistic</option>
+    <option value="anime">🎨 Anime</option>
+    <option value="documentary">🎥 Documentary</option>
+  </select>
+
+  <br><br>
+
+  <label>Creativity Strength</label><br>
+  <select id="strength">
+    <option value="soft">Soft</option>
+    <option value="medium" selected>Medium</option>
+    <option value="wild">Wild</option>
+  </select>
+
+  <br><br>
+
+  <button onclick="generate()">Generate</button>
+  <button onclick="regenerate()">🔁 Variation</button>
+
+  <pre id="output"></pre>
+
+  <script>
+    let lastPrompt = "";
+
+    async function generate() {
+      const prompt = document.getElementById("prompt").value.trim();
+      const mode = document.getElementById("mode").value;
+      const strength = document.getElementById("strength").value;
+      const output = document.getElementById("output");
+
+      if (!prompt) {
+        output.textContent = "❌ Please enter a prompt.";
+        return;
+      }
+
+      lastPrompt = prompt;
+      output.textContent = "⏳ Generating...";
+
+      try {
+        const response = await fetch("/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            prompt,
+            mode,
+            strength
+          })
+        });
+
+        const data = await response.json();
+        output.textContent = data.reply || "❌ Error generating response";
+
+      } catch (err) {
+        output.textContent = "❌ Server error";
+      }
+    }
+
+    function regenerate() {
+      if (!lastPrompt) return;
+      document.getElementById("prompt").value = lastPrompt;
+      generate();
+    }
+  </script>
+
+</body>
+</html>
