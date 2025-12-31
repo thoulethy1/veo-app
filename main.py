@@ -10,14 +10,9 @@ from openai import OpenAI
 
 
 
-load_dotenv()
+from openai import OpenAI
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-if not OPENAI_API_KEY:
-    print("⚠️ OPENAI_API_KEY not set yet")
-
-
-client = OpenAI(api_key=OPENAI_API_KEY)
+client = OpenAI()
 
 
 
