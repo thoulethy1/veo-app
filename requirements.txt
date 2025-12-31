@@ -2,5 +2,4 @@ fastapi
 uvicorn[standard]
 python-dotenv
 openai
-pydantic
-starlette
+itsdangerous
