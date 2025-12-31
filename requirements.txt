@@ -1,7 +1,4 @@
 fastapi
-uvicorn
-python-dotenv
+uvicorn[standard]
 openai
-pydantic
-python-multipart
-itsdangerous
+python-dotenv
